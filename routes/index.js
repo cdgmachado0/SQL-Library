@@ -15,10 +15,10 @@ function asyncHandler(cb) {
 
 /* GET home page. */
 router.get('/', asyncHandler(async (req, res) => {
-  // res.render('index', { title: 'Express' });
   const books = await Book.findAll();
-  console.log(books);
   res.json(books);
 }));
+
+
 
 module.exports = router;
