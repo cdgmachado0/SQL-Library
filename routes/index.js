@@ -14,11 +14,17 @@ function asyncHandler(cb) {
 }
 
 /* GET home page. */
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', (req, res) => {
+  res.redirect('/books');
+});
+
+router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
-  res.json(books);
+  res.render('allBooks', { books });
 }));
 
 
 
 module.exports = router;
+
+// res.render('index', {title: 'hello world'});
