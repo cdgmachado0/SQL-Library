@@ -42,7 +42,7 @@ app.use(function(err, req, res, next) {
 // connection to database
 // (async () => {
 //   try {
-//     await sequelize.sync();
+//     await sequelize.authenticate();
 //     console.log('Connection to database successfull!');
 //   } catch (error) {
 //     console.error('Error connecting to database: ', error);
