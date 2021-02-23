@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const Book = require('../models').Book;
+const Book = require('../models/').Book;
 
 
 function asyncHandler(cb) {
@@ -14,12 +14,11 @@ function asyncHandler(cb) {
 }
 
 /* GET home page. */
-router.get('/', asyncHandler( (req, res) => {
-  res.render('index', { title: 'Express' });
-  // const books = await Book.findAll();
-  // console.log('hi');
-  // console.log(books.toJSON());
-  // res.json(books);
+router.get('/', asyncHandler(async (req, res) => {
+  // res.render('index', { title: 'Express' });
+  const books = await Book.findAll();
+  console.log(books);
+  res.json(books);
 }));
 
 module.exports = router;
