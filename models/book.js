@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const {
   Model
 } = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   class Book extends Model {
     /**
      * Helper method for defining associations.
@@ -15,22 +15,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Book.init({
+    id: {     //getting the IDs to be created in sequence, could be that i have to set autoincrement in options also
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     title: {
       type: Sequelize.STRING,
       allowNull: false,
       validate: {
-        msg: 'Title cannot be empty'
+        notNull: {
+          msg: 'Title cannot be empty'
+        }
       }
     },
     author: {
       type: Sequelize.STRING,
       allowNull: false,
       validate: {
-        msg: 'Author cannot be empty'
+        notNull: {
+          msg: 'Author cannot be empty'
+        }
       }
     },
-    genre: DataTypes.STRING,
-    year: DataTypes.INTEGER
+    genre: Sequelize.STRING,
+    year: Sequelize.INTEGER
   }, {
     sequelize,
     modelName: 'Book',

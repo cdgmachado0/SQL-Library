@@ -13,6 +13,8 @@ function asyncHandler(cb) {
   }
 }
 
+
+
 /* GET home page. */
 router.get('/', (req, res) => {
   res.redirect('/books');
@@ -22,6 +24,16 @@ router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
   res.render('allBooks', { books });
 }));
+
+router.get('/books/new', (req, res) => {
+  res.render('newBook');
+});
+
+router.post('/books/new', asyncHandler(async (req, res) => {
+  await Book.create(req.body);
+  res.redirect('/');
+}));
+
 
 
 
