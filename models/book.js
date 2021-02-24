@@ -24,7 +24,10 @@ module.exports = (sequelize) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'Title cannot be empty'
+          msg: "Please insert a value for 'title'"
+        },
+        notEmpty: {
+          msg: "'Title' cannot be empty"
         }
       }
     },
@@ -33,7 +36,10 @@ module.exports = (sequelize) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: 'Author cannot be empty'
+          msg: "Please insert a value for 'author'"
+        },
+        notEmpty: {
+          msg: "'Author' cannot be empty"
         }
       }
     },

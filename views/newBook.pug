@@ -3,6 +3,13 @@ extends layout
 block content 
     h1 New Book
     form(method='post')
+        if (error)
+            h2(class='error') Oooops!
+            ul(class='error')
+                if (!book.title)
+                    li Name is required 
+                if (!book.author)
+                    li Author is required
         p 
             label(for='title') Title 
             input(name='title' type='text' id='title') 
@@ -19,3 +26,5 @@ block content
             input(type="submit" value="Create New Book")
         p 
             a(class="button" href="/") Cancel
+
+            //trying to get the value of the input on each field when validating

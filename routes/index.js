@@ -39,11 +39,20 @@ router.get('/books/new', (req, res) => {
 });
 
 router.post('/books/new', asyncHandler(async (req, res) => {
-  const nextId = await getNextId();
-  const newModel = req.body;
-  newModel.id = nextId;
-  await Book.create(newModel);
-  res.redirect('/');
+  try {
+    const nextId = await getNextId();
+    const newModel = req.body;
+    newModel.id = nextId;
+    await Book.create(newModel);
+    res.redirect('/');
+  } catch (error) {
+      if (error.name === 'SequelizeValidationError') {
+        const book = await Book.build(req.body);
+        res.render('newBook', { book, title: 'New Book', error })
+    } else {
+      throw error;
+    }
+  }
 }));
 
 router.get('/books/:id', asyncHandler(async (req, res) => {
@@ -65,7 +74,5 @@ router.post('/books/:id/delete', asyncHandler(async (req, res) => {
 
 
 
-
 module.exports = router;
 
-// res.render('index', {title: 'hello world'});
