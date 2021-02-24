@@ -15,10 +15,9 @@ module.exports = (sequelize) => {
     }
   };
   Book.init({
-    id: {     //getting the IDs to be created in sequence, could be that i have to set autoincrement in options also
+    id: {     
       type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     title: {
       type: Sequelize.STRING,

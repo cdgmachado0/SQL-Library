@@ -13,6 +13,15 @@ function asyncHandler(cb) {
   }
 }
 
+async function getNextId() {
+  const idsArr = [];
+  const books = await Book.findAll();
+  for (let book of books) {
+    const id = book.dataValues.id;
+    idsArr.push(id);
+  }
+  return Math.max(...idsArr) + 1;
+}
 
 
 /* GET home page. */
@@ -22,16 +31,24 @@ router.get('/', (req, res) => {
 
 router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
-  res.render('allBooks', { books });
+  res.render('allBooks', { books, title: 'Books'});
 }));
 
 router.get('/books/new', (req, res) => {
-  res.render('newBook');
+  res.render('newBook', { title: 'New Book' });
 });
 
 router.post('/books/new', asyncHandler(async (req, res) => {
-  await Book.create(req.body);
+  const nextId = await getNextId();
+  const newModel = req.body;
+  newModel.id = nextId;
+  await Book.create(newModel);
   res.redirect('/');
+}));
+
+router.get('/books/:id', asyncHandler(async (req, res) => {
+  const book = await Book.findbyPk(req.params.id);
+  res.render('updateBook', { title: book.title, book });
 }));
 
 
