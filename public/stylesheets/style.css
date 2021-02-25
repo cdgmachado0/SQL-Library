@@ -99,3 +99,8 @@ input[type=text] {
 #search-button {
   margin-left: 0px;
 }
+
+.pagination {
+  margin: 10px;
+}
+

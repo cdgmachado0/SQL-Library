@@ -31,13 +31,34 @@ router.get('/', (req, res) => {
 });
 
 router.get('/books', asyncHandler(async (req, res) => {
-  const books = await Book.findAll();
-  res.render('allBooks', { books, title: 'List of Books'});
+  const listBooks = await Book.findAll();
+  const pagBooks = await Book.findAll({ limit: 5 });
+  const pages = Math.ceil(listBooks.length / 5);
+  res.render('allBooks', { books: pagBooks, pages, title: 'List of Books'});
 }));
+
+
+router.get('/books/page/:page', asyncHandler(async (req, res) => {
+  const page = req.params.page;
+
+  const offset = (page * 5) - 5;
+  const limit = (5 * page) - 1;
+
+  const books = await Book.findAll({ offset, limit });
+  res.render('allBooks', {title: 'Books', books});
+
+  //this should gives the books by pagination but
+  //instead it gives the same error for when the URL 
+  //was mistaken by the id on /books/:id....check that 
+  
+
+}))
+
 
 router.get('/books/new', (req, res) => {
   res.render('newBook', { title: 'New Book' });
 });
+
 
 router.post('/books/new', asyncHandler(async (req, res) => {
   try {
@@ -57,7 +78,6 @@ router.post('/books/new', asyncHandler(async (req, res) => {
 }));
 
 
-
 router.get('/books/search', asyncHandler(async (req, res) => {
   const search = req.query.search;
   const { count, rows } = await Book.findAndCountAll({
@@ -74,17 +94,18 @@ router.get('/books/search', asyncHandler(async (req, res) => {
 }));
 
 
-
 router.get('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   res.render('updateBook', { title: book.title, book });
 }));
+
 
 router.post('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.update(req.body);
   res.redirect('/');
 }));
+
 
 router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);

@@ -24,3 +24,6 @@ block content
                     td= book.author 
                     td= book.genre 
                     td= book.year
+    - var n = 1;
+    while n < `${pages + 1}`
+        a(class='button pagination' href='/books/page/#{n}')= n++
