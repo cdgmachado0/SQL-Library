@@ -76,13 +76,10 @@ router.get('/books/search', asyncHandler(async (req, res) => {
       // },
     }
   });
-  // res.render('allBook', { title: 'Book search', books: rows });
-  console.log('Counts start here: ', count);
-  console.log('Rows start here: ', rows);
-  res.redirect('https://www.google.com');
+  res.render('allBooks', { books: rows , title: 'Book search'});
 }));
 
-//working on the search bar
+
 
 router.get('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
