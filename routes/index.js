@@ -62,18 +62,12 @@ router.get('/books/search', asyncHandler(async (req, res) => {
   const search = req.query.search;
   const { count, rows } = await Book.findAndCountAll({
     where: {
-      title: {
-        [Op.substring]: `${search}`
-      }
-      // author: {
-      //   [Op.substring]: `${search}`
-      // }
-      // genre: {
-      //   [Op.substring]: `${search}`
-      // }
-      // year: {
-      //   [Op.substring]: `${search}`
-      // },
+      [Op.or]: [
+        {title: { [Op.substring]: `${search}` }},
+        {author: { [Op.substring]: `${search}` }},
+        {genre: { [Op.substring]: `${search}` }},
+        {year: { [Op.substring]: `${search}`} }
+      ]
     }
   });
   res.render('allBooks', { books: rows , title: 'Book search'});
