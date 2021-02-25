@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const Book = require('../models/').Book;
+const { Op } = require('../models/').Sequelize;
 
 
 function asyncHandler(cb) {
@@ -24,14 +25,14 @@ async function getNextId() {
 }
 
 
-/* GET home page.. */
+/* GET home page. */
 router.get('/', (req, res) => {
   res.redirect('/books');
 });
 
 router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
-  res.render('allBooks', { books, title: 'Books'});
+  res.render('allBooks', { books, title: 'List of Books'});
 }));
 
 router.get('/books/new', (req, res) => {
@@ -55,6 +56,34 @@ router.post('/books/new', asyncHandler(async (req, res) => {
   }
 }));
 
+
+
+router.get('/books/search', asyncHandler(async (req, res) => {
+  const search = req.query.search;
+  const { count, rows } = await Book.findAndCountAll({
+    where: {
+      title: {
+        [Op.substring]: `${search}`
+      }
+      // author: {
+      //   [Op.substring]: `${search}`
+      // }
+      // genre: {
+      //   [Op.substring]: `${search}`
+      // }
+      // year: {
+      //   [Op.substring]: `${search}`
+      // },
+    }
+  });
+  // res.render('allBook', { title: 'Book search', books: rows });
+  console.log('Counts start here: ', count);
+  console.log('Rows start here: ', rows);
+  res.redirect('https://www.google.com');
+}));
+
+//working on the search bar
+
 router.get('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   res.render('updateBook', { title: book.title, book });
@@ -71,6 +100,7 @@ router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   await book.destroy();
   res.redirect('/');
 }));
+
 
 
 
