@@ -12,19 +12,19 @@ block content
                     li Author is required
         p 
             label(for='title') Title 
-            input(name='title' type='text' id='title') 
+            input(name='title' type='text' id='title' value= error ? `${book.title}` : '') 
         p 
             label(for='author') Author 
-            input(name="author" type="text" id="author")
+            input(name="author" type="text" id="author" value= error ? `${book.author}` : '')
         p 
             label(for='genre') Genre 
-            input(name="genre" type="text" id="genre")
+            input(name="genre" type="text" id="genre" value= error ? `${book.genre}` : '')
         p 
             label(for='year') Year 
-            input(name="year" type="text" id="year")
+            input(name="year" type="text" id="year" value= error ? `${book.year}` : '')
         p 
             input(type="submit" value="Create New Book")
         p 
             a(class="button" href="/") Cancel
 
-            //trying to get the value of the input on each field when validating
+            
