@@ -5,7 +5,9 @@ block content
     p 
         a(class="button" href="/books/new") Create New Book
     p 
-        a(class='button' href='/') All Books
+        a(class='button' href='/books/list') Pagination List 
+    p 
+        a(class='button' href='/') Full List
     form(action='/books/search')
         input(id='search-button' type='submit' value='Search')
         input(type='text' name='search')
@@ -24,6 +26,7 @@ block content
                     td= book.author 
                     td= book.genre 
                     td= book.year
-    - var n = 1;
-    while n < `${pages + 1}`
-        a(class='button pagination' href=`/books/page-${n}`)= n++
+    if (pagination)
+        - var n = 1;
+        while n < `${pages + 1}`
+            a(class='button pagination' href=`/books/page-${n}`)= n++

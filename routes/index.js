@@ -24,6 +24,12 @@ async function getNextId() {
   return Math.max(...idsArr) + 1;
 }
 
+async function setPages() {
+  const listBooks = await Book.findAll();
+  const pages = Math.ceil(listBooks.length / 5);
+  return pages;
+}
+
 
 /* GET home page. */
 router.get('/', (req, res) => {
@@ -31,26 +37,23 @@ router.get('/', (req, res) => {
 });
 
 router.get('/books', asyncHandler(async (req, res) => {
-  const listBooks = await Book.findAll();
+  const books = await Book.findAll();
+  res.render('allBooks', { books, title: 'List of Books' });
+}));
+
+router.get('/books/list', asyncHandler(async (req, res) => {
   const pagBooks = await Book.findAll({ limit: 5 });
-  const pages = Math.ceil(listBooks.length / 5);
-  res.render('allBooks', { books: pagBooks, pages, title: 'List of Books'});
+  const pages = await setPages();
+  res.render('allBooks', { books: pagBooks, pages, pagination: true, title: 'List of Books'});
 }));
 
 
 router.get('/books/page-:page', asyncHandler(async (req, res) => {
   const numPages = req.params.page;
-
   const offset = (numPages * 5) - 5;
-  const limit = 5;
-
-  const books = await Book.findAll({ offset, limit });
-
-  const listBooks = await Book.findAll();
-  const pages = Math.ceil(listBooks.length / 5);
-
-  res.render('allBooks', {title: 'Books', books, pages});
-
+  const books = await Book.findAll({ offset, limit: 5 });
+  const pages = await setPages();
+  res.render('allBooks', {title: 'Books', books, pages, pagination: true});
 }))
 
 
