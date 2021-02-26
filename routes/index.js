@@ -38,19 +38,18 @@ router.get('/books', asyncHandler(async (req, res) => {
 }));
 
 
-router.get('/books/page/:page', asyncHandler(async (req, res) => {
-  const page = req.params.page;
+router.get('/books/page-:page', asyncHandler(async (req, res) => {
+  const numPages = req.params.page;
 
-  const offset = (page * 5) - 5;
-  const limit = (5 * page) - 1;
+  const offset = (numPages * 5) - 5;
+  const limit = 5;
 
   const books = await Book.findAll({ offset, limit });
-  res.render('allBooks', {title: 'Books', books});
 
-  //this should gives the books by pagination but
-  //instead it gives the same error for when the URL 
-  //was mistaken by the id on /books/:id....check that 
-  
+  const listBooks = await Book.findAll();
+  const pages = Math.ceil(listBooks.length / 5);
+
+  res.render('allBooks', {title: 'Books', books, pages});
 
 }))
 
