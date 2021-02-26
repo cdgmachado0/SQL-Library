@@ -41,7 +41,7 @@ router.get('/books', asyncHandler(async (req, res) => {
   res.render('allBooks', { books, title: 'List of Books' });
 }));
 
-router.get('/books/list', asyncHandler(async (req, res) => {
+router.get('/books/pages', asyncHandler(async (req, res) => {
   const pagBooks = await Book.findAll({ limit: 5 });
   const pages = await setPages();
   res.render('allBooks', { books: pagBooks, pages, pagination: true, title: 'List of Books'});
@@ -50,10 +50,14 @@ router.get('/books/list', asyncHandler(async (req, res) => {
 
 router.get('/books/page-:page', asyncHandler(async (req, res) => {
   const numPages = req.params.page;
-  const offset = (numPages * 5) - 5;
-  const books = await Book.findAll({ offset, limit: 5 });
-  const pages = await setPages();
-  res.render('allBooks', {title: 'Books', books, pages, pagination: true});
+  if (numPages === '1') {
+    res.redirect('/books/pages');
+  } else {
+    const offset = (numPages * 5) - 5;
+    const books = await Book.findAll({ offset, limit: 5 });
+    const pages = await setPages();
+    res.render('allBooks', {title: 'Books', books, pages, pagination: true});
+  }
 }))
 
 
@@ -96,9 +100,14 @@ router.get('/books/search', asyncHandler(async (req, res) => {
 }));
 
 
-router.get('/books/:id', asyncHandler(async (req, res) => {
-  const book = await Book.findByPk(req.params.id);
-  res.render('updateBook', { title: book.title, book });
+router.get('/books/:id', asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  if (typeof id === 'number') {
+    const book = await Book.findByPk(id);
+    res.render('updateBook', { title: book.title, book });
+  } else {
+    next();
+  }
 }));
 
 
@@ -114,6 +123,14 @@ router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   await book.destroy();
   res.redirect('/');
 }));
+
+
+router.get('/page-not-found', (req, res) => {
+  const error = new Error();
+  error.status = 404;
+  error.message = "The page you're trying to see doesn't exist"
+  res.render('page-not-found', { error });
+})
 
 
 

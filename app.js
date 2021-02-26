@@ -24,12 +24,9 @@ app.use('/static', express.static('public'));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// catch 404 and forward to error handler
+// catch 404 and forward to page-not-found view
 app.use((req, res) => {
-  const error = new Error();
-  error.status = 404;
-  error.message = "The page you're trying to see doesn't exist"
-  res.render('page-not-found', { error });
+  res.redirect('/page-not-found');
 });
 
 // error handler

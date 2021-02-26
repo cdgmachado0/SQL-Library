@@ -104,3 +104,18 @@ input[type=text] {
   margin: 10px;
 }
 
+#outer {
+    width:100%;
+    text-align: left;
+}
+
+.inner {
+    display: inline-block;
+    margin-left: 0px;
+}
+
+a.button:first-child {
+  margin-left: 5px;
+}
+
+
