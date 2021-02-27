@@ -14,6 +14,7 @@ function asyncHandler(cb) {
   }
 }
 
+//Assigns the next ID in queue to the new created model
 async function getNextId() {
   const idsArr = [];
   const books = await Book.findAll();
@@ -24,6 +25,7 @@ async function getNextId() {
   return Math.max(...idsArr) + 1;
 }
 
+//Sets the number of pages to be created for pagination
 async function setPages() {
   const listBooks = await Book.findAll();
   const pages = Math.ceil(listBooks.length / 5);
@@ -36,11 +38,15 @@ router.get('/', (req, res) => {
   res.redirect('/books');
 });
 
+
+//Full-list router
 router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
   res.render('allBooks', { books, title: 'List of Books' });
 }));
 
+
+//Paginantion-list router
 router.get('/books/pages', asyncHandler(async (req, res) => {
   const pagBooks = await Book.findAll({ limit: 5 });
   const pages = await setPages();
@@ -48,6 +54,7 @@ router.get('/books/pages', asyncHandler(async (req, res) => {
 }));
 
 
+//Handles the division of books per selected page
 router.get('/books/page-:page', asyncHandler(async (req, res) => {
   const numPages = req.params.page;
   if (numPages === '1') {
@@ -61,11 +68,13 @@ router.get('/books/page-:page', asyncHandler(async (req, res) => {
 }))
 
 
+//Gets the view for adding a new book to the database
 router.get('/books/new', (req, res) => {
   res.render('newBook', { title: 'New Book' });
 });
 
 
+//Adds a new book to the database
 router.post('/books/new', asyncHandler(async (req, res) => {
   try {
     const nextId = await getNextId();
@@ -84,6 +93,7 @@ router.post('/books/new', asyncHandler(async (req, res) => {
 }));
 
 
+//Handles the dynamic search of books through the Search Bar
 router.get('/books/search', asyncHandler(async (req, res) => {
   const search = req.query.search;
   const { count, rows } = await Book.findAndCountAll({
@@ -100,10 +110,11 @@ router.get('/books/search', asyncHandler(async (req, res) => {
 }));
 
 
+//Gets the details of a particular book
 router.get('/books/:id', asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  if (typeof id === 'number') {
-    const book = await Book.findByPk(id);
+  const book = await Book.findByPk(id);
+  if (typeof +id === 'number' && book) {
     res.render('updateBook', { title: book.title, book });
   } else {
     next();
@@ -111,6 +122,7 @@ router.get('/books/:id', asyncHandler(async (req, res, next) => {
 }));
 
 
+//Handles the update of a particular book in the database
 router.post('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.update(req.body);
@@ -118,6 +130,7 @@ router.post('/books/:id', asyncHandler(async (req, res) => {
 }));
 
 
+//Deletes a particular book from the database
 router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.destroy();
@@ -125,13 +138,13 @@ router.post('/books/:id/delete', asyncHandler(async (req, res) => {
 }));
 
 
+//Render the page-not-found view
 router.get('/page-not-found', (req, res) => {
   const error = new Error();
   error.status = 404;
   error.message = "The page you're trying to see doesn't exist"
   res.render('page-not-found', { error });
 })
-
 
 
 
