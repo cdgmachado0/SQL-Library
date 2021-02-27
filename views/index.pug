@@ -1,5 +1,33 @@
-extends layout
+extends layout 
 
-block content
-  h1= title
-  p Welcome to #{title}
+block content 
+    h1 Books 
+    div(id='outer')
+        p(class='inner') 
+            a(class="button" href="/books/new") Create New Book
+        p(class='inner') 
+            a(class='button' id='hi' href='/books/pages') Pagination List 
+        p(class='inner')  
+            a(class='button' href='/') Full List
+    form(action='/books/search')
+        input(id='search-button' type='submit' value='Search')
+        input(type='text' name='search')
+    table 
+        thead 
+            tr
+                th Title 
+                th Author 
+                th Genre 
+                th Year
+        tbody 
+            each book in books 
+                tr
+                    td 
+                        a(href=`/books/${book.id}`)= book.title
+                    td= book.author 
+                    td= book.genre 
+                    td= book.year
+    if (pagination)
+        - var n = 1;
+        while n < `${pages + 1}`
+            a(class='button pagination' href=`/books/page-${n}`)= n++

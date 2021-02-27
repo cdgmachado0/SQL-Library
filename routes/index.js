@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 //Full-list router
 router.get('/books', asyncHandler(async (req, res) => {
   const books = await Book.findAll();
-  res.render('allBooks', { books, title: 'List of Books' });
+  res.render('index', { books, title: 'List of Books' });
 }));
 
 
@@ -50,7 +50,7 @@ router.get('/books', asyncHandler(async (req, res) => {
 router.get('/books/pages', asyncHandler(async (req, res) => {
   const pagBooks = await Book.findAll({ limit: 5 });
   const pages = await setPages();
-  res.render('allBooks', { books: pagBooks, pages, pagination: true, title: 'List of Books'});
+  res.render('index', { books: pagBooks, pages, pagination: true, title: 'List of Books'});
 }));
 
 
@@ -63,14 +63,14 @@ router.get('/books/page-:page', asyncHandler(async (req, res) => {
     const offset = (numPages * 5) - 5;
     const books = await Book.findAll({ offset, limit: 5 });
     const pages = await setPages();
-    res.render('allBooks', {title: 'Books', books, pages, pagination: true});
+    res.render('index', {title: 'Books', books, pages, pagination: true});
   }
 }))
 
 
 //Gets the view for adding a new book to the database
 router.get('/books/new', (req, res) => {
-  res.render('newBook', { title: 'New Book' });
+  res.render('new-book', { title: 'New Book' });
 });
 
 
@@ -85,7 +85,7 @@ router.post('/books/new', asyncHandler(async (req, res) => {
   } catch (error) {
       if (error.name === 'SequelizeValidationError') {
         const book = await Book.build(req.body);
-        res.render('newBook', { book, title: 'New Book', error })
+        res.render('new-book', { book, title: 'New Book', error })
     } else {
       throw error;
     }
@@ -106,7 +106,7 @@ router.get('/books/search', asyncHandler(async (req, res) => {
       ]
     }
   });
-  res.render('allBooks', { books: rows , title: 'Book search'});
+  res.render('index', { books: rows , title: 'Book search'});
 }));
 
 
@@ -115,7 +115,7 @@ router.get('/books/:id', asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const book = await Book.findByPk(id);
   if (typeof +id === 'number' && book) {
-    res.render('updateBook', { title: book.title, book });
+    res.render('update-book', { title: book.title, book });
   } else {
     next();
   }
